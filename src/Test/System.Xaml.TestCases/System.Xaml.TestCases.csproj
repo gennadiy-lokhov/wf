@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-		<DefineConstants>TRACE;DEBUG;NETSTANDARD;CORE;NETCOREAPP2_0;HAS_TYPE_CONVERTER</DefineConstants>
+		<DefineConstants>TRACE;DEBUG;NETSTANDARD;CORE;NET10_0;HAS_TYPE_CONVERTER</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 		<DebugType>
 		</DebugType>
-    <DefineConstants>TRACE;RELEASE;NETSTANDARD;CORE;NETCOREAPP2_0;HAS_TYPE_CONVERTER</DefineConstants>
+    <DefineConstants>TRACE;RELEASE;NETSTANDARD;CORE;NET10_0;HAS_TYPE_CONVERTER</DefineConstants>
   </PropertyGroup>
 	<ItemGroup>
 		<Compile Remove="MainTestPage.*" />

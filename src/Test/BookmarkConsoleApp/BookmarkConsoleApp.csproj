@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../CoreWf/CoreWf.csproj" />
+    <ProjectReference Include="../../UiPath.Workflow/UiPath.Workflow.csproj" />
     <ProjectReference Include="../JsonFileInstanceStore/JsonFileInstanceStore.csproj" />
   </ItemGroup>
 

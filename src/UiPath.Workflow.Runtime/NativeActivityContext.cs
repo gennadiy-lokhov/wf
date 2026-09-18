@@ -2105,13 +2105,6 @@ public class NativeActivityContext : ActivityContext
             throw FxTrace.Exception.AsError(new InvalidOperationException(SR.CannotScheduleChildrenWhileEnteringIsolation));
         }
 
-
-        /* Unmerged change from project 'System.Activities (net6.0-windows)'
-        Before:
-                ActivityInstance declaringActivityInstance = FindDeclaringActivityInstance(CurrentInstance, activityDelegate.Owner);
-        After:
-                ActivityInstance declaringActivityInstance = NativeActivityContext.FindDeclaringActivityInstance(CurrentInstance, activityDelegate.Owner);
-        */
         ActivityInstance declaringActivityInstance = FindDeclaringActivityInstance(CurrentInstance, activityDelegate.Owner);
 
         if (parent.IsPerformingDefaultCancelation)
