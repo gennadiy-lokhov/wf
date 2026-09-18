@@ -1,8 +1,7 @@
 // This file is part of Core WF which is licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 
-using Newtonsoft.Json;
-using System;
+using System.Text.Json;
 using System.Activities.Tracking;
 using System.Diagnostics.Tracing;
 
@@ -10,6 +9,8 @@ namespace System.Activities.EtwTracking
 {
     public sealed class EtwTrackingParticipant : TrackingParticipant
     {
+        private static readonly JsonSerializerOptions JsonSerializerOptions = new() { WriteIndented = true };
+
         private const string truncatedItemsTag = "<items>...</items>";
         private const string emptyItemsTag = "<items />";
         private const string itemsTag = "items";
@@ -83,9 +84,9 @@ namespace System.Activities.EtwTracking
                 WfEtwTrackingEventSource.Instance.ActivityStateRecord(record.InstanceId,
                     record.RecordNumber, record.EventTime, record.State,
                     record.Activity.Name, record.Activity.Id, record.Activity.InstanceId, record.Activity.TypeName,
-                    record.Arguments.Count > 0 ? JsonConvert.SerializeObject(record.Arguments, Formatting.Indented) : emptyItemsTag,
-                    record.Variables.Count > 0 ? JsonConvert.SerializeObject(record.Variables, Formatting.Indented) : emptyItemsTag,
-                    record.HasAnnotations ? JsonConvert.SerializeObject(record.Annotations, Formatting.Indented) : emptyItemsTag,
+                    record.Arguments.Count > 0 ? JsonSerializer.Serialize(record.Arguments, JsonSerializerOptions) : emptyItemsTag,
+                    record.Variables.Count > 0 ? JsonSerializer.Serialize(record.Variables, JsonSerializerOptions) : emptyItemsTag,
+                    record.HasAnnotations ? JsonSerializer.Serialize(record.Annotations, JsonSerializerOptions) : emptyItemsTag,
                     this.TrackingProfile == null ? string.Empty : this.TrackingProfile.Name, this.ApplicationReference);
             }
         }
@@ -102,7 +103,7 @@ namespace System.Activities.EtwTracking
                     scheduledRecord.Activity == null ? string.Empty : scheduledRecord.Activity.InstanceId,
                     scheduledRecord.Activity == null ? string.Empty : scheduledRecord.Activity.TypeName,
                     scheduledRecord.Child.Name, scheduledRecord.Child.Id, scheduledRecord.Child.InstanceId, scheduledRecord.Child.TypeName,
-                    scheduledRecord.HasAnnotations ? JsonConvert.SerializeObject(scheduledRecord.Annotations, Formatting.Indented) : emptyItemsTag,
+                    scheduledRecord.HasAnnotations ? JsonSerializer.Serialize(scheduledRecord.Annotations, JsonSerializerOptions) : emptyItemsTag,
                     this.TrackingProfile == null ? string.Empty : this.TrackingProfile.Name, this.ApplicationReference);
             }
         }
@@ -119,7 +120,7 @@ namespace System.Activities.EtwTracking
                     cancelRecord.Activity == null ? string.Empty : cancelRecord.Activity.InstanceId,
                     cancelRecord.Activity == null ? string.Empty : cancelRecord.Activity.TypeName,
                     cancelRecord.Child.Name, cancelRecord.Child.Id, cancelRecord.Child.InstanceId, cancelRecord.Child.TypeName,
-                    cancelRecord.HasAnnotations ? JsonConvert.SerializeObject(cancelRecord.Annotations, Formatting.Indented) : emptyItemsTag,
+                    cancelRecord.HasAnnotations ? JsonSerializer.Serialize(cancelRecord.Annotations, JsonSerializerOptions) : emptyItemsTag,
                     this.TrackingProfile == null ? string.Empty : this.TrackingProfile.Name, this.ApplicationReference);
             }
         }
@@ -137,7 +138,7 @@ namespace System.Activities.EtwTracking
                     faultRecord.FaultHandler != null ? faultRecord.FaultHandler.InstanceId : string.Empty,
                     faultRecord.FaultHandler != null ? faultRecord.FaultHandler.TypeName : string.Empty,
                     faultRecord.Fault.ToString(), faultRecord.IsFaultSource,
-                    faultRecord.HasAnnotations ? JsonConvert.SerializeObject(faultRecord.Annotations, Formatting.Indented) : emptyItemsTag,
+                    faultRecord.HasAnnotations ? JsonSerializer.Serialize(faultRecord.Annotations, JsonSerializerOptions) : emptyItemsTag,
                     this.TrackingProfile == null ? string.Empty : this.TrackingProfile.Name, this.ApplicationReference);
             }
         }
@@ -149,7 +150,7 @@ namespace System.Activities.EtwTracking
                 WfEtwTrackingEventSource.Instance.BookmarkResumptionRecord(record.InstanceId, record.RecordNumber, record.EventTime,
                     record.BookmarkName, record.BookmarkScope, record.Owner.Name, record.Owner.Id,
                     record.Owner.InstanceId, record.Owner.TypeName,
-                    record.HasAnnotations ? JsonConvert.SerializeObject(record.Annotations, Formatting.Indented) : emptyItemsTag,
+                    record.HasAnnotations ? JsonSerializer.Serialize(record.Annotations, JsonSerializerOptions) : emptyItemsTag,
                     this.TrackingProfile == null ? string.Empty : this.TrackingProfile.Name, this.ApplicationReference);
             }
         }
@@ -164,8 +165,8 @@ namespace System.Activities.EtwTracking
                         WfEtwTrackingEventSource.Instance.CustomTrackingRecordError(record.InstanceId,
                             record.RecordNumber, record.EventTime, record.Name,
                             record.Activity.Name, record.Activity.Id, record.Activity.InstanceId, record.Activity.TypeName,
-                            JsonConvert.SerializeObject(record.Data, Formatting.Indented),
-                            record.HasAnnotations ? JsonConvert.SerializeObject(record.Annotations, Formatting.Indented) : emptyItemsTag,
+                            JsonSerializer.Serialize(record.Data, JsonSerializerOptions),
+                            record.HasAnnotations ? JsonSerializer.Serialize(record.Annotations, JsonSerializerOptions) : emptyItemsTag,
                             this.TrackingProfile == null ? string.Empty : this.TrackingProfile.Name, this.ApplicationReference);
                     }
                     break;
@@ -175,8 +176,8 @@ namespace System.Activities.EtwTracking
                         WfEtwTrackingEventSource.Instance.CustomTrackingRecordWarning(record.InstanceId,
                             record.RecordNumber, record.EventTime, record.Name,
                             record.Activity.Name, record.Activity.Id, record.Activity.InstanceId, record.Activity.TypeName,
-                            JsonConvert.SerializeObject(record.Data, Formatting.Indented),
-                            record.HasAnnotations ? JsonConvert.SerializeObject(record.Annotations, Formatting.Indented) : emptyItemsTag,
+                            JsonSerializer.Serialize(record.Data, JsonSerializerOptions),
+                            record.HasAnnotations ? JsonSerializer.Serialize(record.Annotations, JsonSerializerOptions) : emptyItemsTag,
                             this.TrackingProfile == null ? string.Empty : this.TrackingProfile.Name, this.ApplicationReference);
                     }
                     break;
@@ -187,8 +188,8 @@ namespace System.Activities.EtwTracking
                         WfEtwTrackingEventSource.Instance.CustomTrackingRecordInfo(record.InstanceId,
                             record.RecordNumber, record.EventTime, record.Name,
                             record.Activity.Name, record.Activity.Id, record.Activity.InstanceId, record.Activity.TypeName,
-                            JsonConvert.SerializeObject(record.Data, Formatting.Indented),
-                            record.HasAnnotations ? JsonConvert.SerializeObject(record.Annotations, Formatting.Indented) : emptyItemsTag,
+                            JsonSerializer.Serialize(record.Data, JsonSerializerOptions),
+                            record.HasAnnotations ? JsonSerializer.Serialize(record.Annotations, JsonSerializerOptions) : emptyItemsTag,
                             this.TrackingProfile == null ? string.Empty : this.TrackingProfile.Name, this.ApplicationReference);
                     }
                     break;
@@ -237,7 +238,7 @@ namespace System.Activities.EtwTracking
                         unhandled.RecordNumber, unhandled.EventTime, unhandled.ActivityDefinitionId,
                         unhandled.FaultSource.Name, unhandled.FaultSource.Id, unhandled.FaultSource.InstanceId, unhandled.FaultSource.TypeName,
                         unhandled.UnhandledException == null ? string.Empty : unhandled.UnhandledException.ToString(),
-                        unhandled.HasAnnotations ? JsonConvert.SerializeObject(unhandled.Annotations, Formatting.Indented) : emptyItemsTag,
+                        unhandled.HasAnnotations ? JsonSerializer.Serialize(unhandled.Annotations, JsonSerializerOptions) : emptyItemsTag,
                         this.TrackingProfile == null ? string.Empty : this.TrackingProfile.Name, this.ApplicationReference);
                 }
             }
@@ -249,7 +250,7 @@ namespace System.Activities.EtwTracking
                         unhandled.RecordNumber, unhandled.EventTime, unhandled.ActivityDefinitionId,
                         unhandled.FaultSource.Name, unhandled.FaultSource.Id, unhandled.FaultSource.InstanceId, unhandled.FaultSource.TypeName,
                         unhandled.UnhandledException == null ? string.Empty : unhandled.UnhandledException.ToString(),
-                        unhandled.HasAnnotations ? JsonConvert.SerializeObject(unhandled.Annotations, Formatting.Indented) : emptyItemsTag,
+                        unhandled.HasAnnotations ? JsonSerializer.Serialize(unhandled.Annotations, JsonSerializerOptions) : emptyItemsTag,
                         this.TrackingProfile == null ? string.Empty : this.TrackingProfile.Name ?? string.Empty,
                         unhandled.WorkflowDefinitionIdentity.ToString(), this.ApplicationReference);
                 }
@@ -265,7 +266,7 @@ namespace System.Activities.EtwTracking
                 {
                     WfEtwTrackingEventSource.Instance.WorkflowInstanceAbortedRecord(aborted.InstanceId, aborted.RecordNumber,
                         aborted.EventTime, aborted.ActivityDefinitionId, aborted.Reason,
-                        aborted.HasAnnotations ? JsonConvert.SerializeObject(aborted.Annotations, Formatting.Indented) : emptyItemsTag,
+                        aborted.HasAnnotations ? JsonSerializer.Serialize(aborted.Annotations, JsonSerializerOptions) : emptyItemsTag,
                         this.TrackingProfile == null ? string.Empty : this.TrackingProfile.Name, this.ApplicationReference);
                 }
             }
@@ -275,7 +276,7 @@ namespace System.Activities.EtwTracking
                 {
                     WfEtwTrackingEventSource.Instance.WorkflowInstanceAbortedRecordWithId(aborted.InstanceId, aborted.RecordNumber,
                         aborted.EventTime, aborted.ActivityDefinitionId, aborted.Reason,
-                        aborted.HasAnnotations ? JsonConvert.SerializeObject(aborted.Annotations, Formatting.Indented) : emptyItemsTag,
+                        aborted.HasAnnotations ? JsonSerializer.Serialize(aborted.Annotations, JsonSerializerOptions) : emptyItemsTag,
                         this.TrackingProfile == null ? string.Empty : this.TrackingProfile.Name ?? string.Empty,
                         aborted.WorkflowDefinitionIdentity.ToString(), this.ApplicationReference);
                 }
@@ -291,7 +292,7 @@ namespace System.Activities.EtwTracking
                 {
                     WfEtwTrackingEventSource.Instance.WorkflowInstanceSuspendedRecord(suspended.InstanceId, suspended.RecordNumber,
                         suspended.EventTime, suspended.ActivityDefinitionId, suspended.Reason,
-                        suspended.HasAnnotations ? JsonConvert.SerializeObject(suspended.Annotations, Formatting.Indented) : emptyItemsTag,
+                        suspended.HasAnnotations ? JsonSerializer.Serialize(suspended.Annotations, JsonSerializerOptions) : emptyItemsTag,
                         this.TrackingProfile == null ? string.Empty : this.TrackingProfile.Name, this.ApplicationReference);
                 }
             }
@@ -301,7 +302,7 @@ namespace System.Activities.EtwTracking
                 {
                     WfEtwTrackingEventSource.Instance.WorkflowInstanceSuspendedRecordWithId(suspended.InstanceId, suspended.RecordNumber,
                         suspended.EventTime, suspended.ActivityDefinitionId, suspended.Reason,
-                        suspended.HasAnnotations ? JsonConvert.SerializeObject(suspended.Annotations, Formatting.Indented) : emptyItemsTag,
+                        suspended.HasAnnotations ? JsonSerializer.Serialize(suspended.Annotations, JsonSerializerOptions) : emptyItemsTag,
                         this.TrackingProfile == null ? string.Empty : this.TrackingProfile.Name ?? string.Empty,
                         suspended.WorkflowDefinitionIdentity.ToString(), this.ApplicationReference);
                 }
@@ -317,7 +318,7 @@ namespace System.Activities.EtwTracking
                 {
                     WfEtwTrackingEventSource.Instance.WorkflowInstanceTerminatedRecord(terminated.InstanceId, terminated.RecordNumber,
                         terminated.EventTime, terminated.ActivityDefinitionId, terminated.Reason,
-                        terminated.HasAnnotations ? JsonConvert.SerializeObject(terminated.Annotations, Formatting.Indented) : emptyItemsTag,
+                        terminated.HasAnnotations ? JsonSerializer.Serialize(terminated.Annotations, JsonSerializerOptions) : emptyItemsTag,
                         this.TrackingProfile == null ? string.Empty : this.TrackingProfile.Name, this.ApplicationReference);
                 }
             }
@@ -327,7 +328,7 @@ namespace System.Activities.EtwTracking
                 {
                     WfEtwTrackingEventSource.Instance.WorkflowInstanceTerminatedRecordWithId(terminated.InstanceId, terminated.RecordNumber,
                         terminated.EventTime, terminated.ActivityDefinitionId, terminated.Reason,
-                        terminated.HasAnnotations ? JsonConvert.SerializeObject(terminated.Annotations, Formatting.Indented) : emptyItemsTag,
+                        terminated.HasAnnotations ? JsonSerializer.Serialize(terminated.Annotations, JsonSerializerOptions) : emptyItemsTag,
                         this.TrackingProfile == null ? string.Empty : this.TrackingProfile.Name ?? string.Empty,
                         terminated.WorkflowDefinitionIdentity.ToString(), this.ApplicationReference);
                 }
@@ -343,7 +344,7 @@ namespace System.Activities.EtwTracking
                     WfEtwTrackingEventSource.Instance.WorkflowInstanceRecord(record.InstanceId, record.RecordNumber,
                         record.EventTime, record.ActivityDefinitionId,
                         record.State,
-                        record.HasAnnotations ? JsonConvert.SerializeObject(record.Annotations, Formatting.Indented) : emptyItemsTag,
+                        record.HasAnnotations ? JsonSerializer.Serialize(record.Annotations, JsonSerializerOptions) : emptyItemsTag,
                         this.TrackingProfile == null ? string.Empty : this.TrackingProfile.Name, this.ApplicationReference);
                 }
             }
@@ -354,7 +355,7 @@ namespace System.Activities.EtwTracking
                     WfEtwTrackingEventSource.Instance.WorkflowInstanceRecordWithId(record.InstanceId, record.RecordNumber,
                         record.EventTime, record.ActivityDefinitionId,
                         record.State,
-                        record.HasAnnotations ? JsonConvert.SerializeObject(record.Annotations, Formatting.Indented) : emptyItemsTag,
+                        record.HasAnnotations ? JsonSerializer.Serialize(record.Annotations, JsonSerializerOptions) : emptyItemsTag,
                         this.TrackingProfile == null ? string.Empty : this.TrackingProfile.Name ?? string.Empty,
                         record.WorkflowDefinitionIdentity.ToString(), this.ApplicationReference);
                 }
