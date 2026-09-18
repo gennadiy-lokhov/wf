@@ -1,0 +1,42 @@
+trigger:
+  branches:
+    include:
+    - main
+    - develop
+  paths:
+    include:
+    - src/*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet restore'
+  inputs:
+    command: 'restore'
+    projects: '**/UiPath.*.csproj'
+    feedsToUse: 'select'
+    vstsFeed: 'bc108bce-104d-4dd7-8fd6-5ddee3b5a810/02a4a47e-3db1-453a-bc67-0da76a11d1c5'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build'
+  inputs:
+    command: 'build'
+    projects: '**/UiPath.*.csproj'
+    arguments: '--configuration Release --no-restore'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet pack'
+  inputs:
+    command: 'pack'
+    packagesToPack: '**/UiPath.*.csproj'
+    versioningScheme: 'off'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet push'
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: 'bc108bce-104d-4dd7-8fd6-5ddee3b5a810/02a4a47e-3db1-453a-bc67-0da76a11d1c5'
