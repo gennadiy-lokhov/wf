@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 
 namespace System.Activities;
 
@@ -36,9 +36,9 @@ public static class PowerFxHelper
         var localsValues = new Dictionary<string, FormulaValue>();
         foreach (var local in parent.GetLocals())
         {
-            localsValues.TryAdd(local.Name, FormulaValue.New(getValue(local), local.Type));
+            localsValues.TryAdd(local.Name, PrimitiveValueConversions.Marshal(getValue(local), local.Type));
         }
 
-        return FormulaValue.RecordFromFields(localsValues.Select(l => new NamedValue(l)));
+        return FormulaValue.NewRecordFromFields(localsValues.Select(l => new NamedValue(l)));
     }
 }

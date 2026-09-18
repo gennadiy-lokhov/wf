@@ -1,6 +1,5 @@
-﻿using Microsoft.PowerFx;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx;
+using Microsoft.PowerFx.Types;
 using System;
 using System.Activities;
 using System.Collections.Generic;
@@ -17,8 +16,8 @@ namespace TestConsole
             new PowerFxTests().EvaluateMembers();
             return;
             var engine = new RecalcEngine();
-            var defaultValue = FormulaValue.New(null, typeof(string));
-            var record = FormulaValue.RecordFromFields(new NamedValue("x", defaultValue));
+            var defaultValue = PrimitiveValueConversions.Marshal(null, typeof(string));
+            var record = FormulaValue.NewRecordFromFields(new NamedValue("x", defaultValue));
             var text = "1+Len(Left(x, 2))/2";
             var checkResult = engine.Check(text, record.Type);
             checkResult.ThrowOnErrors();
