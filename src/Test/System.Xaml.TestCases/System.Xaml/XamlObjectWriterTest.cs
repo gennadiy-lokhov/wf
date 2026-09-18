@@ -30,6 +30,7 @@ using System.Reflection;
 using System.Xml;
 using NUnit.Framework;
 using System.Windows.Markup;
+using NUnit.Framework.Legacy;
 #if PCL
 
 using System.Xaml;

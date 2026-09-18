@@ -8,6 +8,6 @@
     <EmbeddedResource Include="TestXamls\*.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AgileObjects.ReadableExpressions" Version="3.1.0" />
+    <PackageReference Include="AgileObjects.ReadableExpressions" Version="4.1.3" />
   </ItemGroup>
 </Project>

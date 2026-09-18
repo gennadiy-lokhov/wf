@@ -34,6 +34,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Windows.Input;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using sc = System.ComponentModel;
 #if !PCL136
 using System.Collections.Immutable;
