@@ -1,11 +1,9 @@
-[![Build Status](https://uipath.visualstudio.com/CoreWF/_apis/build/status/UiPath.CoreWF?repoName=UiPath%2FCoreWF&branchName=develop)](https://uipath.visualstudio.com/CoreWF/_build/latest?definitionId=2249&repoName=UiPath%2FCoreWF&branchName=develop)
-
 # CoreWF
 
-A port of the Windows Workflow Foundation (WF) runtime to .NET 6. This project is still in the experimental phase. It
+A port of the Windows Workflow Foundation (WF) runtime to .NET 10. This project is still in the experimental phase. It
 is [licensed](LICENSE) under the MIT License.
 
-__This is not an official Microsoft release of WF on .NET 6. CoreWF is a derivative work of Microsoft's copyrighted
+__This is not an official Microsoft release of WF on .NET 10. CoreWF is a derivative work of Microsoft's copyrighted
 Windows Workflow Foundation.__
 
 ## WF Overview
@@ -69,8 +67,8 @@ Foundation" individual component in the Visual Studio Installer.
 
 ## Target Frameworks
 
-CoreWF targets .NET 6 and .NET 6 Windows. The .NET Windows target uses the **System.Xaml** included in the .NET Desktop
-Runtime. To use CoreWF on non-Windows runtimes, use the portable .NET 6 target. This is possible because CoreWF includes
+CoreWF targets .NET 10 and .NET 10 Windows. The .NET Windows target uses the **System.Xaml** included in the .NET Desktop
+Runtime. To use CoreWF on non-Windows runtimes, use the portable .NET 10 target. This is possible because CoreWF includes
 a copy of the **System.Xaml** code.
 
 ## Usage
